@@ -1,5 +1,7 @@
 #include<stdio.h>
 #include<string.h>
+#include<dirent.h>
+#include<sys/stat.h>
 typedef struct file{
     char *category;
     char *extension[10];
@@ -23,9 +25,34 @@ char* getCategory(const char *ext){
     }    
     return "others";
 }
+//function to organize files in given directory]
+void organizeFiles(const char* directroyName){
+    struct dirent *entry;
+    //1. Open the directory and check wheather it exists or not
+    DIR *dir = opendir(directroyName);
+    if(!dir){
+        perror("ERROR: ");
+        return;
+    }
+    //2. Read The content of opended directtory and store it in entry
+   while((entry = readdir(dir))!=NULL){
+        //2.1 check if read content is file or not
+        // if(entry->d_type == DT_REG){
+
+        // }
+        if( entry->d_type == DT_REG){
+            printf("FIle found");
+        }
+    }
+
+
+
+}
+
 void main(){
-    char s[10] = ".mp4";
-   char *ptr = getCategory(&s[0]);
-   printf("%s\n", ptr);
+//     char s[10] = ".mp4";
+//    char *ptr = getCategory(&s[0]);
+//    printf("%s\n", ptr);
+organizeFiles("/home/ankit/Desktop/C_File_Script");
 
 }

@@ -2,6 +2,8 @@
 #include<string.h>
 #include<dirent.h>
 #include<sys/stat.h>
+#include<bits/types.h>
+#define MAX_PATH 1300
 typedef struct file{
     char *category;
     char *extension[10];
@@ -27,6 +29,9 @@ char* getCategory(const char *ext){
 }
 //function to organize files in given directory]
 void organizeFiles(const char* directroyName){
+    char categoryPathName[MAX_PATH];
+    char oldPathName[MAX_PATH];
+    char newPathName[MAX_PATH];
     struct dirent *entry;
     //1. Open the directory and check wheather it exists or not
     DIR *dir = opendir(directroyName);
@@ -34,25 +39,23 @@ void organizeFiles(const char* directroyName){
         perror("ERROR: ");
         return;
     }
-    //2. Read The content of opended directtory and store it in entry
+    //2. Read The content of opened directory and store it in entry
    while((entry = readdir(dir))!=NULL){
         //2.1 check if read content is file or not
-        // if(entry->d_type == DT_REG){
-
-        // }
         if( entry->d_type == DT_REG){
-            printf("FIle found");
+            //2.2 call getCategory by getting the file extension
+            char *category = getCategory(strrchr(entry->d_name, '.'));
+            //2.3 create the directory if doesn't exists
+            snprintf(categoryPathName, sizeof(categoryPathName), "%s/%s", directroyName, category);    
+            mkdir(categoryPathName, 0777);   
+            snprintf(oldPathName, sizeof(oldPathName), "%s/%s", directroyName, entry->d_name);
+            snprintf(newPathName, sizeof(newPathName), "%s/%s", categoryPathName, entry->d_name);
+            printf("Moved\n");
         }
     }
-
-
-
+    closedir(dir);
 }
 
 void main(){
-//     char s[10] = ".mp4";
-//    char *ptr = getCategory(&s[0]);
-//    printf("%s\n", ptr);
-organizeFiles("/home/ankit/Desktop/C_File_Script");
-
+    organizeFiles("/home/ankit/Desktop/demo");
 }

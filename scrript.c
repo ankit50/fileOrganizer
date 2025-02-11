@@ -3,7 +3,7 @@
 #include<dirent.h>
 #include<sys/stat.h>
 #include<bits/types.h>
-#define MAX_PATH 1300
+#define MAX_PATH 1024
 typedef struct file{
     char *category;
     char *extension[10];
@@ -50,7 +50,7 @@ void organizeFiles(const char* directroyName){
             mkdir(categoryPathName, 0777);   
             snprintf(oldPathName, sizeof(oldPathName), "%s/%s", directroyName, entry->d_name);
             snprintf(newPathName, sizeof(newPathName), "%s/%s", categoryPathName, entry->d_name);
-            printf("Moved\n");
+            rename(oldPathName, newPathName);
         }
     }
     closedir(dir);
